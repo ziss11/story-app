@@ -55,13 +55,13 @@ class _AddStoryPageState extends State<AddStoryPage> {
                   AppButton(
                     onPressed: () {},
                     backgroundColor: AppColors.purpleColor,
-                    text: AppLocalizations.of(context)!.cameraLabel,
+                    child: Text(AppLocalizations.of(context)!.cameraLabel),
                   ),
                   const SizedBox(width: 16),
                   AppButton(
                     onPressed: () {},
                     backgroundColor: AppColors.purpleColor,
-                    text: AppLocalizations.of(context)!.galleryLabel,
+                    child: Text(AppLocalizations.of(context)!.galleryLabel),
                   )
                 ],
               ),
@@ -74,7 +74,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
               AppButton(
                 width: MediaQuery.of(context).size.width,
                 onPressed: () {},
-                text: AppLocalizations.of(context)!.uploadLabel,
+                child: Text(AppLocalizations.of(context)!.uploadLabel),
               )
             ],
           ),

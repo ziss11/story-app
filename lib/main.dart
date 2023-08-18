@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:story_app/cubit/auth/auth_cubit.dart';
 import 'package:story_app/cubit/localization/localization_cubit.dart';
 import 'package:story_app/utils/providers.dart';
 import 'package:story_app/utils/router.dart';
@@ -9,8 +10,10 @@ import 'package:story_app/utils/styles/app_colors.dart';
 import 'injection.dart';
 import 'utils/common.dart';
 
-void main() {
-  Injection.init();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Injection.init();
   runApp(const MyApp());
 }
 
@@ -23,6 +26,8 @@ class MyApp extends StatelessWidget {
       providers: providers,
       child: BlocBuilder<LocalizationCubit, Locale>(
         builder: (context, locale) {
+          final authCubit = context.read<AuthCubit>();
+          final router = configureRouter(authCubit);
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
             routerDelegate: router.routerDelegate,

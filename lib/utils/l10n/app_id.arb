@@ -15,5 +15,12 @@
     "cameraLabel": "Kamera",
     "galleryLabel": "Galeri",
     "descHint": "Deskripsi",
-    "uploadLabel": "Unggah"
+    "uploadLabel": "Unggah",
+    "emptyEmailAlert": "Email tidak boleh kosong",
+    "emailAlert": "Email tidak valid",
+    "emptyPasswordAlert": "Password tidak boleh kosong",
+    "passwordAlert": "Kata sandi harus memiliki minimal 8 karakter",
+    "logoutMessage": "Anda yakin ingin keluar?",
+    "cancel": "Batal",
+    "ok": "Oke"
 }

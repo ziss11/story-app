@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:story_app/cubit/auth/auth_cubit.dart';
 import 'package:story_app/presentation/pages/sign_in_page.dart';
 import 'package:story_app/presentation/widgets/app_button.dart';
 import 'package:story_app/presentation/widgets/app_textfield.dart';
 import 'package:story_app/utils/common.dart';
 import 'package:story_app/utils/styles/app_colors.dart';
+import 'package:story_app/utils/validators.dart';
 
 class SignUpPage extends StatefulWidget {
   static const path = '/sign-up';
@@ -17,12 +20,23 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignUpPage> {
+  final _formKey = GlobalKey<FormState>();
+
   bool isObsecureText = true;
   bool isPasswordNotEmpty = false;
 
   late TextEditingController nameController;
   late TextEditingController emailController;
   late TextEditingController passController;
+
+  void register() {
+    FocusScope.of(context).unfocus();
+
+    if (_formKey.currentState!.validate()) {
+      context.read<AuthCubit>().register(
+          nameController.text, emailController.text, passController.text);
+    }
+  }
 
   @override
   void initState() {
@@ -77,68 +91,98 @@ class _SignInPageState extends State<SignUpPage> {
         physics: const BouncingScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 70, 16, 30),
-          child: Column(
-            children: [
-              AppTextField(
-                controller: nameController,
-                label: AppLocalizations.of(context)!.nameLabel,
-                hint: AppLocalizations.of(context)!.nameHint,
-                prefixIcon: const Icon(Icons.person_rounded),
-              ),
-              const SizedBox(height: 20),
-              AppTextField(
-                controller: emailController,
-                label: AppLocalizations.of(context)!.emailLabel,
-                hint: AppLocalizations.of(context)!.emailHint,
-                prefixIcon: const Icon(Icons.email_rounded),
-              ),
-              const SizedBox(height: 20),
-              AppTextField(
-                controller: passController,
-                obscureText: isObsecureText,
-                label: AppLocalizations.of(context)!.passwordLabel,
-                hint: AppLocalizations.of(context)!.passwordHint,
-                prefixIcon: const Icon(Icons.lock),
-                suffixIcon: isPasswordNotEmpty
-                    ? IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isObsecureText = !isObsecureText;
-                          });
-                        },
-                        icon: isObsecureText
-                            ? const Icon(Icons.visibility_rounded)
-                            : const Icon(Icons.visibility_off_rounded),
-                      )
-                    : null,
-              ),
-              const SizedBox(height: 30),
-              AppButton(
-                width: MediaQuery.of(context).size.width,
-                onPressed: () {},
-                text: AppLocalizations.of(context)!.signUpTitle,
-              ),
-              const SizedBox(height: 30),
-              GestureDetector(
-                onTap: () => context.goNamed(SignInPage.routeName),
-                child: Text.rich(
-                  TextSpan(
-                    text: AppLocalizations.of(context)!.alreadyHaveAccounLabel,
-                    style: const TextStyle(
-                      color: AppColors.greyColor,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: AppLocalizations.of(context)!.signInTitle,
-                        style: const TextStyle(
-                          color: AppColors.purpleColor,
-                        ),
-                      ),
-                    ],
-                  ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                AppTextField(
+                  controller: nameController,
+                  label: AppLocalizations.of(context)!.nameLabel,
+                  hint: AppLocalizations.of(context)!.nameHint,
+                  prefixIcon: const Icon(Icons.person_rounded),
                 ),
-              )
-            ],
+                const SizedBox(height: 20),
+                AppTextField(
+                  controller: emailController,
+                  label: AppLocalizations.of(context)!.emailLabel,
+                  hint: AppLocalizations.of(context)!.emailHint,
+                  prefixIcon: const Icon(Icons.email_rounded),
+                  validator: (value) =>
+                      Validators.validateEmail(context, value),
+                ),
+                const SizedBox(height: 20),
+                AppTextField(
+                  controller: passController,
+                  obscureText: isObsecureText,
+                  label: AppLocalizations.of(context)!.passwordLabel,
+                  hint: AppLocalizations.of(context)!.passwordHint,
+                  validator: (value) =>
+                      Validators.validatePassword(context, value),
+                  prefixIcon: const Icon(Icons.lock),
+                  suffixIcon: isPasswordNotEmpty
+                      ? IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isObsecureText = !isObsecureText;
+                            });
+                          },
+                          icon: isObsecureText
+                              ? const Icon(Icons.visibility_rounded)
+                              : const Icon(Icons.visibility_off_rounded),
+                        )
+                      : null,
+                ),
+                const SizedBox(height: 30),
+                BlocConsumer<AuthCubit, AuthState>(
+                  listener: (context, state) {
+                    if (state is AuthSuccess) {
+                      context.goNamed(SignInPage.routeName);
+                    } else if (state is AuthFailed) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: AppColors.redColor,
+                          content: Text(state.message),
+                        ),
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    return AppButton(
+                      width: MediaQuery.of(context).size.width,
+                      onPressed: register,
+                      child: (state is AuthLoading)
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.lightBlueColor,
+                              ),
+                            )
+                          : Text(AppLocalizations.of(context)!.signUpTitle),
+                    );
+                  },
+                ),
+                const SizedBox(height: 30),
+                GestureDetector(
+                  onTap: () => context.goNamed(SignInPage.routeName),
+                  child: Text.rich(
+                    TextSpan(
+                      text:
+                          AppLocalizations.of(context)!.alreadyHaveAccounLabel,
+                      style: const TextStyle(
+                        color: AppColors.greyColor,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: AppLocalizations.of(context)!.signInTitle,
+                          style: const TextStyle(
+                            color: AppColors.purpleColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

@@ -15,5 +15,12 @@
     "cameraLabel": "Camera",
     "galleryLabel": "Gallery",
     "descHint": "Description",
-    "uploadLabel": "Upload"
+    "uploadLabel": "Upload",
+    "emptyEmailAlert": "Email can't be empty",
+    "emailAlert": "Email not valid",
+    "emptyPasswordAlert": "Password can't be empty",
+    "passwordAlert": "Password must have at least 8 characters",
+    "logoutMessage": "Are you sure want to logout?",
+    "cancel": "Cancel",
+    "ok": "Ok"
 }

@@ -7,12 +7,12 @@ class AppButton extends StatelessWidget {
   final double height;
   final Color backgroundColor;
   final Color foregroundColor;
-  final String text;
+  final Widget child;
 
   const AppButton({
     super.key,
     required this.onPressed,
-    required this.text,
+    required this.child,
     this.width = double.infinity,
     this.height = 50,
     this.backgroundColor = AppColors.purpleColor,
@@ -31,7 +31,7 @@ class AppButton extends StatelessWidget {
         ),
       ),
       onPressed: onPressed,
-      child: Text(text),
+      child: child,
     );
   }
 }

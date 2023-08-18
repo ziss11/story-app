@@ -8,6 +8,7 @@ class AppTextField extends StatelessWidget {
   final Widget prefixIcon;
   final Widget? suffixIcon;
   final bool obscureText;
+  final String? Function(String?)? validator;
 
   const AppTextField({
     super.key,
@@ -15,6 +16,7 @@ class AppTextField extends StatelessWidget {
     required this.label,
     required this.hint,
     required this.prefixIcon,
+    this.validator,
     this.suffixIcon,
     this.obscureText = false,
   });
@@ -36,6 +38,7 @@ class AppTextField extends StatelessWidget {
         TextFormField(
           controller: controller,
           obscureText: obscureText,
+          validator: validator,
           style: const TextStyle(
             color: AppColors.foregroundColor,
           ),
@@ -45,6 +48,9 @@ class AppTextField extends StatelessWidget {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
+            ),
+            errorStyle: const TextStyle(
+              color: AppColors.redColor,
             ),
             hintText: hint,
             hintStyle: const TextStyle(color: AppColors.greyColor),

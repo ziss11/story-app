@@ -6,5 +6,9 @@ import '../injection.dart';
 
 final providers = [
   BlocProvider<LocalizationCubit>(create: (_) => Injection.locator()),
-  BlocProvider<AuthCubit>(create: (_) => Injection.locator()),
+  BlocProvider<AuthCubit>(create: (_) {
+    final authBloc = Injection.locator<AuthCubit>();
+    authBloc.checkStatus();
+    return authBloc;
+  }),
 ];

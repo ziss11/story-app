@@ -11,14 +11,11 @@ class AuthInitial extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
-class AuthSuccess extends AuthState {
-  final String message;
+class AuthSuccess extends AuthState {}
 
-  const AuthSuccess({required this.message});
+class Authenticated extends AuthState {}
 
-  @override
-  List<Object> get props => [message];
-}
+class Unauthenticated extends AuthState {}
 
 class AuthFailed extends AuthState {
   final String message;
