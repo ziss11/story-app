@@ -1,0 +1,19 @@
+{
+    "signInTitle": "Masuk",
+    "signInSubtitle": "Masuk untuk melanjutkan",
+    "emailLabel": "Alamat Email",
+    "emailHint": "Email anda",
+    "passwordLabel": "Password",
+    "passwordHint": "Password anda",
+    "dontHaveAccountLabel": "Belum punya akun? ",
+    "signUpTitle": "Daftar",
+    "signUpSubtitle": "Daftar dan bagikan kegiatan anda",
+    "nameLabel": "Nama",
+    "nameHint": "Nama anda",
+    "alreadyHaveAccounLabel": "Sudah punya akun? ",
+    "newStoryTitle": "Story Baru",
+    "cameraLabel": "Kamera",
+    "galleryLabel": "Galeri",
+    "descHint": "Deskripsi",
+    "uploadLabel": "Unggah"
+}

@@ -1,0 +1,19 @@
+{
+    "signInTitle": "Sign In",
+    "signInSubtitle": "Sign In to continue",
+    "emailLabel": "Email Address",
+    "emailHint": "Your email address",
+    "passwordLabel": "Password",
+    "passwordHint": "Your password",
+    "dontHaveAccountLabel": "Don't have an account? ",
+    "signUpTitle": "Sign Up",
+    "signUpSubtitle": "Register and share your activity",
+    "nameLabel": "Name",
+    "nameHint": "Your name",
+    "alreadyHaveAccounLabel": "Already have an account? ",
+    "newStoryTitle": "New Story",
+    "cameraLabel": "Camera",
+    "galleryLabel": "Gallery",
+    "descHint": "Description",
+    "uploadLabel": "Upload"
+}
