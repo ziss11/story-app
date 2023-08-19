@@ -19,6 +19,7 @@ class LocalizationCubit extends Cubit<LocalizationState> {
   }
 
   void _getLocale() {
-    emit(LocalizationState(locale: _localDataSource.getLocale()));
+    final savedLocale = _localDataSource.getLocale();
+    emit(LocalizationState(locale: savedLocale ?? const Locale('en')));
   }
 }

@@ -4,7 +4,7 @@ import 'package:story_app/utils/app_constants.dart';
 
 abstract class LocalizationLocalDataSource {
   Future<bool> setLocale(String code);
-  Locale getLocale();
+  Locale? getLocale();
 }
 
 class LocalizationLocalDataSourceImpl implements LocalizationLocalDataSource {
@@ -18,8 +18,8 @@ class LocalizationLocalDataSourceImpl implements LocalizationLocalDataSource {
   }
 
   @override
-  Locale getLocale() {
+  Locale? getLocale() {
     final code = _preferences.getString(AppConstants.localeKey);
-    return Locale(code!);
+    return (code == null) ? null : Locale(code);
   }
 }
