@@ -22,5 +22,10 @@
     "passwordAlert": "Password must have at least 8 characters",
     "logoutMessage": "Are you sure want to logout?",
     "cancel": "Cancel",
-    "ok": "Ok"
+    "ok": "Ok",
+    "unableLoadStoryMessage": "Unable to load story data",
+    "emptyStoryMessage": "Empty story",
+    "loginErrorMessage": "Your email or password is incorrect",
+    "registerErrorMessage": "Email has been used",
+    "failedUploadStory": "Story upload failed"
 }

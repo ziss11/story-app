@@ -1,9 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:story_app/data/model/story_model.dart';
+import 'package:story_app/presentation/widgets/app_shimmer.dart';
 import 'package:story_app/utils/styles/app_colors.dart';
 
 class StoryCard extends StatelessWidget {
-  const StoryCard({super.key});
+  final StoryModel story;
+
+  const StoryCard({super.key, required this.story});
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +25,31 @@ class StoryCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: 200,
-                decoration: const BoxDecoration(
-                  color: AppColors.blackColor3,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(12),
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(12),
+                ),
+                child: CachedNetworkImage(
+                  imageUrl: story.photoUrl,
+                  cacheManager: CacheManager(
+                    Config(
+                      'story-image',
+                      stalePeriod: const Duration(seconds: 3),
+                    ),
                   ),
+                  placeholder: (context, url) => AppShimmer(
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                  ),
+                  errorWidget: (context, url, error) =>
+                      const Center(child: Icon(Icons.error)),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                 child: Text(
-                  'Abdul Azis',
-                  style: TextStyle(
+                  story.name,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: AppColors.foregroundColor,
@@ -42,7 +59,7 @@ class StoryCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                 child: ExpandableText(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+                  story.description,
                   style: const TextStyle(
                     color: AppColors.foregroundColor,
                     fontWeight: FontWeight.w400,

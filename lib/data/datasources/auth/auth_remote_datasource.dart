@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:story_app/data/model/base_response.dart';
 import 'package:story_app/utils/app_constants.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<void> register(String name, String email, String password);
+  Future<BaseResponse> register(String name, String email, String password);
   Future<String> login(String email, String password);
 }
 
@@ -28,14 +29,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<void> register(String name, String email, String password) async {
-    try {
-      final body = {'name': name, 'email': email, 'password': password};
-      await _dio.post(
-        '${AppConstants.baseUrl}${AppConstants.registerPath}',
-        data: body,
-      );
-    } catch (e) {
+  Future<BaseResponse> register(
+      String name, String email, String password) async {
+    final body = {'name': name, 'email': email, 'password': password};
+    final response = await _dio.post(
+      '${AppConstants.baseUrl}${AppConstants.registerPath}',
+      data: body,
+    );
+    if (response.statusCode == 201) {
+      final result = BaseResponse.fromJson(response.data);
+      return result;
+    } else {
       throw Exception();
     }
   }

@@ -22,5 +22,10 @@
     "passwordAlert": "Kata sandi harus memiliki minimal 8 karakter",
     "logoutMessage": "Anda yakin ingin keluar?",
     "cancel": "Batal",
-    "ok": "Oke"
+    "ok": "Oke",
+    "unableLoadStoryMessage": "Tidak dapat memuat data story",
+    "emptyStoryMessage": "Story kosong",
+    "loginErrorMessage": "Email atau password anda salah",
+    "registerErrorMessage": "Email telah digunakan",
+    "failedUploadStory": "Gagal mengupload gambar"
 }

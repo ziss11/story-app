@@ -2,18 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:story_app/cubit/auth/auth_cubit.dart';
+import 'package:story_app/cubit/story/story_cubit.dart';
 import 'package:story_app/presentation/pages/add_story_page.dart';
 import 'package:story_app/presentation/pages/sign_in_page.dart';
+import 'package:story_app/presentation/widgets/app_shimmer.dart';
 import 'package:story_app/presentation/widgets/flag_icon_widget.dart';
 import 'package:story_app/presentation/widgets/story_card.dart';
 import 'package:story_app/utils/common.dart';
 import 'package:story_app/utils/styles/app_colors.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static const path = '/';
   static const routeName = 'home';
 
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    Future.microtask(() => context.read<StoryCubit>().getStories(context));
+    super.initState();
+  }
 
   void logout(BuildContext context) {
     showDialog(
@@ -92,15 +105,57 @@ class HomePage extends StatelessWidget {
           ),
           child: const Icon(Icons.add_a_photo),
         ),
-        body: ListView.separated(
-          physics: const BouncingScrollPhysics(),
-          itemCount: 10,
-          padding: const EdgeInsets.all(16),
-          separatorBuilder: (context, index) {
-            return const SizedBox(height: 16);
-          },
-          itemBuilder: (context, index) {
-            return const StoryCard();
+        body: BlocBuilder<StoryCubit, StoryState>(
+          builder: (context, state) {
+            if (state is StoryLoading) {
+              return ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                itemCount: 10,
+                padding: const EdgeInsets.all(16),
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: 16);
+                },
+                itemBuilder: (context, index) {
+                  return AppShimmer(
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                  );
+                },
+              );
+            } else if (state is StoryListSuccess) {
+              return ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                itemCount: state.stories.length,
+                padding: const EdgeInsets.all(16),
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: 16);
+                },
+                itemBuilder: (context, index) {
+                  final story = state.stories[index];
+                  debugPrint('url: ${story.photoUrl}');
+                  return StoryCard(story: story);
+                },
+              );
+            } else if (state is StoryFailed) {
+              return Center(
+                child: Text(
+                  state.message,
+                  style: const TextStyle(
+                    color: AppColors.foregroundColor,
+                  ),
+                ),
+              );
+            } else if (state is StoryInitial) {
+              return Center(
+                child: Text(
+                  AppLocalizations.of(context)!.emptyStoryMessage,
+                  style: const TextStyle(
+                    color: AppColors.foregroundColor,
+                  ),
+                ),
+              );
+            }
+            return const SizedBox();
           },
         ),
       ),

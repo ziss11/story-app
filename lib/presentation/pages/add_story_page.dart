@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:story_app/cubit/media/media_cubit.dart';
+import 'package:story_app/cubit/story/story_cubit.dart';
+import 'package:story_app/presentation/pages/home_page.dart';
 import 'package:story_app/presentation/widgets/app_button.dart';
 import 'package:story_app/presentation/widgets/app_textarea.dart';
-import 'package:story_app/presentation/widgets/empty_image_frame.dart';
+import 'package:story_app/presentation/widgets/image_frame.dart';
 import 'package:story_app/utils/common.dart';
 import 'package:story_app/utils/styles/app_colors.dart';
 
@@ -17,6 +22,26 @@ class AddStoryPage extends StatefulWidget {
 
 class _AddStoryPageState extends State<AddStoryPage> {
   late TextEditingController descController;
+
+  void _onUpload() async {
+    final mediaCubit = context.read<MediaCubit>();
+
+    final imagePath = mediaCubit.state.imagePath;
+    final imageFile = mediaCubit.state.imageFile;
+
+    if (imagePath == null || imageFile == null) return;
+
+    final filename = imageFile.name;
+    final filebytes = await imageFile.readAsBytes();
+
+    final newBytes = await mediaCubit.compressImage(filebytes);
+
+    if (mounted) {
+      context
+          .read<StoryCubit>()
+          .addStory(context, newBytes, filename, descController.text);
+    }
+  }
 
   @override
   void initState() {
@@ -47,19 +72,19 @@ class _AddStoryPageState extends State<AddStoryPage> {
         child: Center(
           child: Column(
             children: [
-              const EmptyImageFrame(),
+              const ImageFrame(),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   AppButton(
-                    onPressed: () {},
+                    onPressed: context.read<MediaCubit>().onCameraView,
                     backgroundColor: AppColors.purpleColor,
                     child: Text(AppLocalizations.of(context)!.cameraLabel),
                   ),
                   const SizedBox(width: 16),
                   AppButton(
-                    onPressed: () {},
+                    onPressed: context.read<MediaCubit>().onGalleryView,
                     backgroundColor: AppColors.purpleColor,
                     child: Text(AppLocalizations.of(context)!.galleryLabel),
                   )
@@ -71,10 +96,26 @@ class _AddStoryPageState extends State<AddStoryPage> {
                 hint: AppLocalizations.of(context)!.descHint,
               ),
               const SizedBox(height: 16),
-              AppButton(
-                width: MediaQuery.of(context).size.width,
-                onPressed: () {},
-                child: Text(AppLocalizations.of(context)!.uploadLabel),
+              BlocConsumer<StoryCubit, StoryState>(
+                listener: (context, state) {
+                  if (state is UploadStorySuccess) {
+                    context.goNamed(HomePage.routeName);
+                    context.read<StoryCubit>().getStories(context);
+                  }
+                },
+                builder: (context, state) {
+                  return AppButton(
+                    width: MediaQuery.of(context).size.width,
+                    onPressed: _onUpload,
+                    child: (state is StoryLoading)
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.lightBlueColor,
+                            ),
+                          )
+                        : Text(AppLocalizations.of(context)!.uploadLabel),
+                  );
+                },
               )
             ],
           ),

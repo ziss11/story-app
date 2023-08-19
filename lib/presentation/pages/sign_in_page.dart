@@ -35,7 +35,7 @@ class _SignInPageState extends State<SignInPage> {
     if (_formKey.currentState!.validate()) {
       context
           .read<AuthCubit>()
-          .login(emailController.text, passController.text);
+          .login(context, emailController.text, passController.text);
     }
   }
 

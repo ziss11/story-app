@@ -7,17 +7,17 @@ sealed class AuthState extends Equatable {
   List<Object> get props => [];
 }
 
-class AuthInitial extends AuthState {}
+final class AuthInitial extends AuthState {}
 
-class AuthLoading extends AuthState {}
+final class AuthLoading extends AuthState {}
 
-class AuthSuccess extends AuthState {}
+final class AuthSuccess extends AuthState {}
 
-class Authenticated extends AuthState {}
+final class Authenticated extends AuthState {}
 
-class Unauthenticated extends AuthState {}
+final class Unauthenticated extends AuthState {}
 
-class AuthFailed extends AuthState {
+final class AuthFailed extends AuthState {
   final String message;
 
   const AuthFailed({required this.message});

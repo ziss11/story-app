@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:story_app/data/datasources/auth/auth_local_datasource.dart';
 import 'package:story_app/data/datasources/auth/auth_remote_datasource.dart';
+import 'package:story_app/utils/common.dart';
 
 part 'auth_state.dart';
 
@@ -22,24 +24,35 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  void register(String name, String email, String password) async {
+  void register(
+      BuildContext context, String name, String email, String password) async {
     try {
       emit(AuthLoading());
       await _remoteDataSource.register(name, email, password);
       emit(AuthSuccess());
     } catch (e) {
-      emit(const AuthFailed(message: 'Email telah digunakan'));
+      emit(
+        AuthFailed(
+          message: AppLocalizations.of(context)!.loginErrorMessage,
+        ),
+      );
     }
   }
 
-  void login(String email, String password) async {
-    emit(AuthLoading());
-    final token = await _remoteDataSource.login(email, password);
+  void login(BuildContext context, String email, String password) async {
+    try {
+      emit(AuthLoading());
 
-    if (await _localDataSource.saveToken(token)) {
+      final token = await _remoteDataSource.login(email, password);
+      await _localDataSource.saveToken(token);
+
       emit(AuthSuccess());
-    } else {
-      emit(const AuthFailed(message: 'Email atau password anda salah'));
+    } catch (e) {
+      emit(
+        AuthFailed(
+          message: AppLocalizations.of(context)!.registerErrorMessage,
+        ),
+      );
     }
   }
 

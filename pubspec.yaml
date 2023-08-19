@@ -46,6 +46,11 @@ dependencies:
   dio: ^5.3.2
   form_validator: ^2.1.1
   shared_preferences: ^2.2.0
+  shimmer: ^3.0.0
+  image_picker: ^1.0.2
+  image: ^4.0.17
+  cached_network_image: ^3.2.3
+  flutter_cache_manager: ^3.3.1
 
 dev_dependencies:
   flutter_test:

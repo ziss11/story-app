@@ -33,8 +33,8 @@ class _SignInPageState extends State<SignUpPage> {
     FocusScope.of(context).unfocus();
 
     if (_formKey.currentState!.validate()) {
-      context.read<AuthCubit>().register(
-          nameController.text, emailController.text, passController.text);
+      context.read<AuthCubit>().register(context, nameController.text,
+          emailController.text, passController.text);
     }
   }
 
