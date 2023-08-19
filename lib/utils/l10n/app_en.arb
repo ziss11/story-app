@@ -27,5 +27,8 @@
     "emptyStoryMessage": "Empty story",
     "loginErrorMessage": "Your email or password is incorrect",
     "registerErrorMessage": "Email has been used",
-    "failedUploadStory": "Story upload failed"
+    "failedUploadStory": "Story upload failed",
+    "registerSuccessMessage": "Register success. Please login!",
+    "detailTitle": "Detail",
+    "emptyDescAlert": "Description can't be empty"
 }

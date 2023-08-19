@@ -8,6 +8,7 @@ import 'package:story_app/cubit/media/media_cubit.dart';
 import 'package:story_app/cubit/story/story_cubit.dart';
 import 'package:story_app/data/datasources/auth/auth_local_datasource.dart';
 import 'package:story_app/data/datasources/auth/auth_remote_datasource.dart';
+import 'package:story_app/data/datasources/localization/localizaion_local_datasource.dart';
 import 'package:story_app/data/datasources/story/story_remote_datasource.dart';
 
 abstract class Injection {
@@ -15,7 +16,8 @@ abstract class Injection {
 
   static Future<void> init() async {
     // cubits
-    locator.registerFactory<LocalizationCubit>(() => LocalizationCubit());
+    locator
+        .registerFactory<LocalizationCubit>(() => LocalizationCubit(locator()));
 
     locator.registerFactory<AuthCubit>(() => AuthCubit(locator(), locator()));
 
@@ -32,6 +34,9 @@ abstract class Injection {
 
     locator.registerLazySingleton<StoryRemoteDataSource>(
         () => StoryRemoteDataSourceImpl(locator()));
+
+    locator.registerLazySingleton<LocalizationLocalDataSource>(
+        () => LocalizationLocalDataSourceImpl(locator()));
 
     // helper
     locator.registerSingleton<SharedPreferences>(

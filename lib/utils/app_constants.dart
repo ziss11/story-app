@@ -1,5 +1,6 @@
 abstract class AppConstants {
   static const tokenKey = 'token';
+  static const localeKey = 'locale';
 
   static const baseUrl = 'https://story-api.dicoding.dev/v1';
 

@@ -5,7 +5,7 @@ import 'package:story_app/utils/app_constants.dart';
 
 abstract class StoryRemoteDataSource {
   Future<List<StoryModel>> getStories(String token);
-  Future<StoryModel> getDetailStory(String token, int id);
+  Future<StoryModel> getDetailStory(String token, String id);
   Future<BaseResponse> addStory(
     String token,
     List<int> bytes,
@@ -52,11 +52,11 @@ class StoryRemoteDataSourceImpl implements StoryRemoteDataSource {
   }
 
   @override
-  Future<StoryModel> getDetailStory(String token, int id) async {
+  Future<StoryModel> getDetailStory(String token, String id) async {
     final headers = {'Authorization': 'Bearer $token'};
     final params = {'location': 1};
     final response = await _dio.get(
-      '${AppConstants.baseUrl}${AppConstants.storiesPath}',
+      '${AppConstants.baseUrl}${AppConstants.storiesPath}/$id',
       queryParameters: params,
       options: Options(headers: headers),
     );

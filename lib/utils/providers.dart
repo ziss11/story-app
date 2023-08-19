@@ -7,12 +7,8 @@ import 'package:story_app/cubit/story/story_cubit.dart';
 import '../injection.dart';
 
 final providers = [
+  BlocProvider<AuthCubit>(create: (_) => Injection.locator()),
   BlocProvider<LocalizationCubit>(create: (_) => Injection.locator()),
   BlocProvider<StoryCubit>(create: (_) => Injection.locator()),
   BlocProvider<MediaCubit>(create: (_) => Injection.locator()),
-  BlocProvider<AuthCubit>(create: (_) {
-    final authBloc = Injection.locator<AuthCubit>();
-    authBloc.checkStatus();
-    return authBloc;
-  }),
 ];

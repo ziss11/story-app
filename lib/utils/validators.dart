@@ -31,4 +31,12 @@ abstract class Validators {
 
     return null;
   }
+
+  static String? validateDesc(BuildContext context, String? value) {
+    if (value == null || value.isEmpty) {
+      return AppLocalizations.of(context)!.emptyDescAlert;
+    }
+
+    return null;
+  }
 }

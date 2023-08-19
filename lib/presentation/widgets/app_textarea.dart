@@ -4,11 +4,13 @@ import 'package:story_app/utils/styles/app_colors.dart';
 class AppTextArea extends StatelessWidget {
   final TextEditingController controller;
   final String hint;
+  final String? Function(String?)? validator;
 
   const AppTextArea({
     super.key,
     required this.controller,
     required this.hint,
+    this.validator,
   });
 
   @override
@@ -17,6 +19,7 @@ class AppTextArea extends StatelessWidget {
       minLines: 6,
       maxLines: null,
       controller: controller,
+      validator: validator,
       style: const TextStyle(
         color: AppColors.foregroundColor,
       ),

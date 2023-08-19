@@ -55,7 +55,7 @@ class StoryCubit extends Cubit<StoryState> {
     }
   }
 
-  void getDetailStory(BuildContext context, int id) async {
+  void getDetailStory(BuildContext context, String id) async {
     try {
       emit(StoryLoading());
 

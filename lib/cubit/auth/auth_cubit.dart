@@ -12,15 +12,17 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthLocalDataSource _localDataSource;
 
   AuthCubit(this._remoteDataSource, this._localDataSource)
-      : super(AuthInitial());
+      : super(AuthInitial()) {
+    _checkStatus();
+  }
 
-  void checkStatus() {
+  void _checkStatus() {
     final token = _localDataSource.getToken();
 
     if (token != null && token.isNotEmpty) {
       emit(Authenticated());
     } else {
-      emit(Unauthenticated());
+      emit(AuthInitial());
     }
   }
 
@@ -33,7 +35,7 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       emit(
         AuthFailed(
-          message: AppLocalizations.of(context)!.loginErrorMessage,
+          message: AppLocalizations.of(context)!.registerErrorMessage,
         ),
       );
     }
@@ -50,7 +52,7 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       emit(
         AuthFailed(
-          message: AppLocalizations.of(context)!.registerErrorMessage,
+          message: AppLocalizations.of(context)!.loginErrorMessage,
         ),
       );
     }
@@ -61,7 +63,7 @@ class AuthCubit extends Cubit<AuthState> {
     final isSuccess = await _localDataSource.deleteToken();
 
     if (isSuccess) {
-      emit(Unauthenticated());
+      emit(AuthInitial());
     }
   }
 }

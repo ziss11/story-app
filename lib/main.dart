@@ -24,8 +24,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: providers,
-      child: BlocBuilder<LocalizationCubit, Locale>(
-        builder: (context, locale) {
+      child: BlocBuilder<LocalizationCubit, LocalizationState>(
+        builder: (context, state) {
           final authCubit = context.read<AuthCubit>();
           final router = configureRouter(authCubit);
           return MaterialApp.router(
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
             backButtonDispatcher: RootBackButtonDispatcher(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            locale: locale,
+            locale: state.locale,
             theme: ThemeData(
               useMaterial3: true,
               appBarTheme: const AppBarTheme(
