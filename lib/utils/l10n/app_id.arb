@@ -34,5 +34,6 @@
     "addLocationLabel": "Tambahkan Lokasi",
     "save": "Simpan",
     "pickLocationLabel": "Pilih Lokasi",
-    "seeLocation": "Lihat lokasi"
+    "seeLocation": "Lihat lokasi",
+    "addLocationLimitMessage": "Fitur ini hanya bisa digunakan pada mode berbayar"
 }

@@ -34,5 +34,6 @@
     "addLocationLabel": "Add Location",
     "save": "Save",
     "pickLocationLabel": "Pick Location",
-    "seeLocation": "See location"
+    "seeLocation": "See location",
+    "addLocationLimitMessage": "This feature can only be used in paid mode"
 }

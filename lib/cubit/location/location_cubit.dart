@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,10 +12,10 @@ part 'location_state.dart';
 class LocationCubit extends Cubit<LocationState> {
   LocationCubit() : super(LocationInitial());
 
-  GoogleMapController? mapController;
+  Completer<GoogleMapController>? mapController;
 
   void onMapCreated(GoogleMapController controller) {
-    mapController = controller;
+    mapController?.complete(controller);
   }
 
   void getPlacemarkFromLatLng(LatLng latLng, languageCode) async {
@@ -107,7 +109,8 @@ class LocationCubit extends Cubit<LocationState> {
 
     defineMarker(latLng, place);
 
-    mapController?.animateCamera(
+    final controller = await mapController?.future;
+    controller?.animateCamera(
       CameraUpdate.newLatLng(latLng),
     );
   }

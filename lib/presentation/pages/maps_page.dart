@@ -83,19 +83,25 @@ class _MapsPageState extends State<MapsPage> {
                           FloatingActionButton.small(
                             heroTag: 'zoom-in',
                             backgroundColor: AppColors.foregroundColor,
-                            onPressed: () => context
-                                .read<LocationCubit>()
-                                .mapController
-                                ?.animateCamera(CameraUpdate.zoomIn()),
+                            onPressed: () async {
+                              final controller = await context
+                                  .read<LocationCubit>()
+                                  .mapController
+                                  ?.future;
+                              controller?.animateCamera(CameraUpdate.zoomIn());
+                            },
                             child: const Icon(Icons.add),
                           ),
                           FloatingActionButton.small(
                             heroTag: 'zoom-out',
                             backgroundColor: AppColors.foregroundColor,
-                            onPressed: () => context
-                                .read<LocationCubit>()
-                                .mapController
-                                ?.animateCamera(CameraUpdate.zoomOut()),
+                            onPressed: () async {
+                              final controller = await context
+                                  .read<LocationCubit>()
+                                  .mapController
+                                  ?.future;
+                              controller?.animateCamera(CameraUpdate.zoomOut());
+                            },
                             child: const Icon(Icons.remove),
                           ),
                         ],

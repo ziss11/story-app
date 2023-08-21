@@ -13,6 +13,7 @@ import 'package:story_app/presentation/widgets/app_button.dart';
 import 'package:story_app/presentation/widgets/app_textarea.dart';
 import 'package:story_app/presentation/widgets/image_frame.dart';
 import 'package:story_app/utils/common.dart';
+import 'package:story_app/utils/flavor_config.dart';
 import 'package:story_app/utils/styles/app_colors.dart';
 import 'package:story_app/utils/validators.dart';
 
@@ -71,6 +72,36 @@ class _AddStoryPageState extends State<AddStoryPage> {
     }
   }
 
+  void limitationDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.blackColor4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        title: Text(
+          AppLocalizations.of(context)!.addLocationLimitMessage,
+          style: const TextStyle(
+            color: AppColors.foregroundColor,
+            fontSize: 16,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: context.pop,
+            child: Text(
+              AppLocalizations.of(context)!.ok,
+              style: const TextStyle(
+                color: AppColors.lightBlueColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void initState() {
     descController = TextEditingController();
@@ -78,13 +109,8 @@ class _AddStoryPageState extends State<AddStoryPage> {
   }
 
   @override
-  void dispose() {
-    descController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final isPaid = FlavorConfig.instance.flavorType == FlavorType.paid;
     return WillPopScope(
       onWillPop: () async {
         context.read<MediaCubit>().setImage(null, null);
@@ -138,11 +164,13 @@ class _AddStoryPageState extends State<AddStoryPage> {
                       ),
                     ),
                     ListTile(
-                      onTap: () async {
-                        mapsResult =
-                            await context.pushNamed(MapsPage.pickRouteName);
-                        setState(() {});
-                      },
+                      onTap: (isPaid)
+                          ? () async {
+                              mapsResult = await context
+                                  .pushNamed(MapsPage.pickRouteName);
+                              setState(() {});
+                            }
+                          : limitationDialog,
                       title: Text(
                         (mapsResult?.placemark != null)
                             ? mapsResult?.placemark?.street ?? ''

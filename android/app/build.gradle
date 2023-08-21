@@ -62,6 +62,16 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    flavorDimensions "flavors"
+    productFlavors {
+        free {
+            dimension "flavors"
+        }
+        paid {
+            dimension "flavors"
+        }
+    }
 }
 
 flutter {
