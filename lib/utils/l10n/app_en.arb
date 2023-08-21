@@ -30,5 +30,8 @@
     "failedUploadStory": "Story upload failed",
     "registerSuccessMessage": "Register success. Please login!",
     "detailTitle": "Detail",
-    "emptyDescAlert": "Description can't be empty"
+    "emptyDescAlert": "Description can't be empty",
+    "addLocationLabel": "Add Location",
+    "save": "Save",
+    "pickLocationLabel": "Pick Location"
 }

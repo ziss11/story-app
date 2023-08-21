@@ -30,5 +30,8 @@
     "failedUploadStory": "Gagal mengupload gambar",
     "registerSuccessMessage": "Mendaftar sukses. Silahkan login!",
     "detailTitle": "Detil",
-    "emptyDescAlert": "Deskripsi tidak boleh kosong"
+    "emptyDescAlert": "Deskripsi tidak boleh kosong",
+    "addLocationLabel": "Tambahkan Lokasi",
+    "save": "Simpan",
+    "pickLocationLabel": "Pilih Lokasi"
 }

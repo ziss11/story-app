@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
           scrollController.position.maxScrollExtent) {
+        debugPrint('page: ${storyCubit.page}');
         if (storyCubit.page != null) storyCubit.getStories(context);
       }
     });
@@ -120,9 +121,13 @@ class _HomePageState extends State<HomePage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50),
           ),
-          onPressed: () => context.pushNamed(
-            AddStoryPage.routeName,
-          ),
+          onPressed: () async {
+            final result = await context.pushNamed(AddStoryPage.routeName);
+
+            if (mounted && result != null) {
+              context.read<StoryCubit>().getStories(context, true);
+            }
+          },
           child: const Icon(Icons.add_a_photo),
         ),
         body: SafeArea(
@@ -142,18 +147,27 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                 );
-              } else if (state is StoryListSuccess) {
+              } else if (state is StorySuccess) {
                 return ListView.separated(
                   controller: scrollController,
-                  itemCount: state.stories.length,
+                  itemCount:
+                      state.stories.length + (state.page != null ? 1 : 0),
                   padding: const EdgeInsets.all(16),
                   separatorBuilder: (context, index) {
                     return const SizedBox(height: 16);
                   },
                   itemBuilder: (context, index) {
+                    if (index == state.stories.length && state.page != null) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.lightBlueColor,
+                        ),
+                      );
+                    }
+
                     final story = state.stories[index];
                     return StoryCard(
-                      onTap: () => context.pushNamed(
+                      onTap: () => context.goNamed(
                         DetailStoryPage.routeName,
                         pathParameters: {'id': story.id},
                       ),

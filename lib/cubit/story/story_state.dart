@@ -13,22 +13,19 @@ final class StoryLoading extends StoryState {}
 
 final class UploadStorySuccess extends StoryState {}
 
-final class StoryListSuccess extends StoryState {
+final class StorySuccess extends StoryState {
   final List<StoryModel> stories;
+  final int? page;
+  final int size;
 
-  const StoryListSuccess({required this.stories});
-
-  @override
-  List<Object> get props => [stories];
-}
-
-final class DetailStorySuccess extends StoryState {
-  final StoryModel story;
-
-  const DetailStorySuccess({required this.story});
+  const StorySuccess({
+    required this.stories,
+    required this.page,
+    required this.size,
+  });
 
   @override
-  List<Object> get props => [story];
+  List<Object> get props => [stories, page ?? 0, size];
 }
 
 final class StoryFailed extends StoryState {

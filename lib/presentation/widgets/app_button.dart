@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:story_app/utils/styles/app_colors.dart';
 
 class AppButton extends StatelessWidget {
-  final Function() onPressed;
+  final Function()? onPressed;
   final double width;
   final double height;
   final Color backgroundColor;

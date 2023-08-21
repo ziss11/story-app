@@ -1,10 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:story_app/cubit/media/media_cubit.dart';
 import 'package:story_app/cubit/story/story_cubit.dart';
-import 'package:story_app/presentation/pages/home_page.dart';
+import 'package:story_app/data/model/map_result.dart';
+import 'package:story_app/presentation/pages/location_picker.dart';
 import 'package:story_app/presentation/widgets/app_button.dart';
 import 'package:story_app/presentation/widgets/app_textarea.dart';
 import 'package:story_app/presentation/widgets/image_frame.dart';
@@ -25,7 +28,19 @@ class AddStoryPage extends StatefulWidget {
 class _AddStoryPageState extends State<AddStoryPage> {
   final _formKey = GlobalKey<FormState>();
 
+  MapsResult? mapsResult;
   late TextEditingController descController;
+
+  String? get placeName {
+    final locality = mapsResult?.placemark?.locality;
+    final subLocality = mapsResult?.placemark?.subLocality;
+    final country = mapsResult?.placemark?.country;
+
+    if (locality == null && country == null && subLocality == null) {
+      return null;
+    }
+    return '${subLocality ?? ''} $locality, $country';
+  }
 
   void _onUpload() async {
     if (_formKey.currentState!.validate()) {
@@ -42,9 +57,13 @@ class _AddStoryPageState extends State<AddStoryPage> {
       final newBytes = await mediaCubit.compressImage(filebytes);
 
       if (mounted) {
-        context
-            .read<StoryCubit>()
-            .addStory(context, newBytes, filename, descController.text);
+        context.read<StoryCubit>().addStory(
+              context,
+              newBytes,
+              filename,
+              descController.text,
+              mapsResult?.latLng,
+            );
       }
     }
   }
@@ -63,75 +82,120 @@ class _AddStoryPageState extends State<AddStoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return KeyboardDismisser(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            AppLocalizations.of(context)!.newStoryTitle,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
+    return WillPopScope(
+      onWillPop: () async {
+        context.read<MediaCubit>().setImage(null, null);
+        return true;
+      },
+      child: KeyboardDismisser(
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              AppLocalizations.of(context)!.newStoryTitle,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
-        ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            physics: const BouncingScrollPhysics(),
-            child: Center(
-              child: Column(
-                children: [
-                  const ImageFrame(),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AppButton(
-                        onPressed: context.read<MediaCubit>().onCameraView,
-                        backgroundColor: AppColors.purpleColor,
-                        child: Text(AppLocalizations.of(context)!.cameraLabel),
-                      ),
-                      const SizedBox(width: 16),
-                      AppButton(
-                        onPressed: context.read<MediaCubit>().onGalleryView,
-                        backgroundColor: AppColors.purpleColor,
-                        child: Text(AppLocalizations.of(context)!.galleryLabel),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Form(
-                    key: _formKey,
-                    child: AppTextArea(
-                      controller: descController,
-                      hint: AppLocalizations.of(context)!.descHint,
-                      validator: (value) =>
-                          Validators.validateDesc(context, value),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              physics: const BouncingScrollPhysics(),
+              child: Center(
+                child: Column(
+                  children: [
+                    const ImageFrame(),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AppButton(
+                          onPressed: context.read<MediaCubit>().onCameraView,
+                          backgroundColor: AppColors.purpleColor,
+                          child:
+                              Text(AppLocalizations.of(context)!.cameraLabel),
+                        ),
+                        const SizedBox(width: 16),
+                        AppButton(
+                          onPressed: context.read<MediaCubit>().onGalleryView,
+                          backgroundColor: AppColors.purpleColor,
+                          child:
+                              Text(AppLocalizations.of(context)!.galleryLabel),
+                        )
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  BlocConsumer<StoryCubit, StoryState>(
-                    listener: (context, state) {
-                      if (state is UploadStorySuccess) {
-                        context.goNamed(HomePage.routeName);
-                        context.read<MediaCubit>().setImage(null, null);
-                        context.read<StoryCubit>().getStories(context);
-                      }
-                    },
-                    builder: (context, state) {
-                      return AppButton(
-                        width: MediaQuery.of(context).size.width,
-                        onPressed: _onUpload,
-                        child: (state is StoryLoading)
-                            ? const Center(
-                                child: CircularProgressIndicator(
-                                  color: AppColors.lightBlueColor,
-                                ),
-                              )
-                            : Text(AppLocalizations.of(context)!.uploadLabel),
-                      );
-                    },
-                  )
-                ],
+                    const SizedBox(height: 20),
+                    Form(
+                      key: _formKey,
+                      child: AppTextArea(
+                        controller: descController,
+                        hint: AppLocalizations.of(context)!.descHint,
+                        validator: (value) =>
+                            Validators.validateDesc(context, value),
+                      ),
+                    ),
+                    ListTile(
+                      onTap: () async {
+                        mapsResult = await context
+                            .pushNamed(LocationPickerPage.routeName);
+                        setState(() {});
+                        debugPrint(mapsResult?.placemark.toString());
+                      },
+                      title: Text(
+                        (mapsResult?.placemark != null)
+                            ? mapsResult?.placemark?.street ?? ''
+                            : AppLocalizations.of(context)!.addLocationLabel,
+                        style: const TextStyle(
+                          color: AppColors.foregroundColor,
+                          fontSize: 14,
+                        ),
+                      ),
+                      subtitle: placeName != null
+                          ? Text(
+                              placeName!,
+                              style: const TextStyle(
+                                color: AppColors.greyColor,
+                              ),
+                            )
+                          : null,
+                      trailing: Transform.rotate(
+                        angle: pi,
+                        child: const Icon(
+                          Icons.arrow_back_ios_new,
+                          color: AppColors.foregroundColor,
+                          size: 18,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    BlocConsumer<StoryCubit, StoryState>(
+                      listener: (context, state) {
+                        if (state is UploadStorySuccess) {
+                          context.pop(true);
+                          context.read<MediaCubit>().setImage(null, null);
+                        }
+                      },
+                      builder: (context, state) {
+                        final mediaCubit = context.watch<MediaCubit>();
+                        final imagePath = mediaCubit.state.imagePath;
+                        final imageFile = mediaCubit.state.imageFile;
+                        return AppButton(
+                          width: MediaQuery.of(context).size.width,
+                          onPressed: (imagePath == null || imageFile == null)
+                              ? null
+                              : _onUpload,
+                          child: (state is StoryLoading)
+                              ? const Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.lightBlueColor,
+                                  ),
+                                )
+                              : Text(AppLocalizations.of(context)!.uploadLabel),
+                        );
+                      },
+                    )
+                  ],
+                ),
               ),
             ),
           ),
