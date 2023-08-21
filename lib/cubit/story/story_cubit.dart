@@ -15,6 +15,9 @@ class StoryCubit extends Cubit<StoryState> {
   StoryCubit(this._storyRemoteDataSource, this._authLocalDataSource)
       : super(StoryInitial());
 
+  int? page = 1;
+  int size = 10;
+
   void addStory(BuildContext context, List<int> bytes, String filename,
       String description) async {
     try {
@@ -36,15 +39,29 @@ class StoryCubit extends Cubit<StoryState> {
 
   void getStories(BuildContext context) async {
     try {
-      emit(StoryLoading());
+      if (page == 1) emit(StoryLoading());
 
       final token = _authLocalDataSource.getToken();
-      final result = await _storyRemoteDataSource.getStories(token!);
+      final result = await _storyRemoteDataSource.getStories(token!,
+          page: page!, size: size);
 
-      if (result.isNotEmpty) {
-        emit(StoryListSuccess(stories: result));
-      } else {
+      if (result.isEmpty) {
         emit(StoryInitial());
+      } else {
+        if (state is StoryListSuccess) {
+          final currentState = state as StoryListSuccess;
+          final updatedStory = List.of(currentState.stories)..addAll(result);
+
+          emit(StoryListSuccess(stories: updatedStory));
+        } else {
+          emit(StoryListSuccess(stories: result));
+        }
+
+        if (result.length < size) {
+          page = null;
+        } else {
+          page = page! + 1;
+        }
       }
     } catch (e) {
       emit(

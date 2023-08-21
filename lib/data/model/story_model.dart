@@ -1,12 +1,18 @@
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'story_model.g.dart';
+
+@JsonSerializable()
 class StoryModel extends Equatable {
   final String id;
   final String name;
   final String description;
   final String photoUrl;
   final DateTime createdAt;
+  @JsonKey(name: 'lat')
   final double? latitude;
+  @JsonKey(name: 'lon')
   final double? longitude;
 
   const StoryModel({
@@ -19,15 +25,10 @@ class StoryModel extends Equatable {
     required this.longitude,
   });
 
-  factory StoryModel.fromJson(Map<String, dynamic> map) => StoryModel(
-        id: map['id'],
-        name: map['name'],
-        description: map['description'],
-        photoUrl: map['photoUrl'],
-        createdAt: DateTime.parse(map['createdAt']),
-        latitude: map['lat'],
-        longitude: map['lon'],
-      );
+  factory StoryModel.fromJson(Map<String, dynamic> json) =>
+      _$StoryModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$StoryModelToJson(this);
 
   @override
   List<Object?> get props => [

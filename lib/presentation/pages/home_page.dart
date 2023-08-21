@@ -23,10 +23,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
-    Future.microtask(() => context.read<StoryCubit>().getStories(context));
+    final storyCubit = context.read<StoryCubit>();
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent) {
+        if (storyCubit.page != null) storyCubit.getStories(context);
+      }
+    });
+
+    Future.microtask(() async => storyCubit.getStories(context));
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+
+    super.dispose();
   }
 
   void logout(BuildContext context) {
@@ -111,7 +130,6 @@ class _HomePageState extends State<HomePage> {
             builder: (context, state) {
               if (state is StoryLoading) {
                 return ListView.separated(
-                  physics: const BouncingScrollPhysics(),
                   itemCount: 10,
                   padding: const EdgeInsets.all(16),
                   separatorBuilder: (context, index) {
@@ -126,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                 );
               } else if (state is StoryListSuccess) {
                 return ListView.separated(
-                  physics: const BouncingScrollPhysics(),
+                  controller: scrollController,
                   itemCount: state.stories.length,
                   padding: const EdgeInsets.all(16),
                   separatorBuilder: (context, index) {

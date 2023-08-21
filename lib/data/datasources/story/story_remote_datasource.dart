@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:story_app/data/model/base_response.dart';
 import 'package:story_app/data/model/story_model.dart';
+import 'package:story_app/data/model/story_response.dart';
 import 'package:story_app/utils/app_constants.dart';
 
 abstract class StoryRemoteDataSource {
-  Future<List<StoryModel>> getStories(String token);
+  Future<List<StoryModel>> getStories(String token,
+      {int page = 1, int size = 10});
   Future<StoryModel> getDetailStory(String token, String id);
   Future<BaseResponse> addStory(
     String token,
@@ -70,16 +72,16 @@ class StoryRemoteDataSourceImpl implements StoryRemoteDataSource {
   }
 
   @override
-  Future<List<StoryModel>> getStories(String token) async {
+  Future<List<StoryModel>> getStories(String token,
+      {int page = 1, int size = 10}) async {
     final headers = {'Authorization': 'Bearer $token'};
     final response = await _dio.get(
-      '${AppConstants.baseUrl}${AppConstants.storiesPath}',
+      '${AppConstants.baseUrl}${AppConstants.storiesPath}?page=$page&size=$size',
       options: Options(headers: headers),
     );
 
     if (response.statusCode == 200) {
-      final result = List<StoryModel>.from(
-          response.data["listStory"].map((x) => StoryModel.fromJson(x)));
+      final result = StoryResponse.fromJson(response.data).stories;
       return result;
     } else {
       throw Exception();

@@ -33,6 +33,7 @@ class StoryCard extends StatelessWidget {
                   ),
                   child: CachedNetworkImage(
                     imageUrl: story.photoUrl,
+                    fit: BoxFit.cover,
                     cacheManager: CacheManager(
                       Config(
                         'story-image',
