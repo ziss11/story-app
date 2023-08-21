@@ -8,6 +8,7 @@ import 'package:story_app/cubit/media/media_cubit.dart';
 import 'package:story_app/cubit/story/story_cubit.dart';
 import 'package:story_app/data/model/map_result.dart';
 import 'package:story_app/presentation/pages/maps_page.dart';
+import 'package:story_app/presentation/widgets/animated_circular_indicator.dart';
 import 'package:story_app/presentation/widgets/app_button.dart';
 import 'package:story_app/presentation/widgets/app_textarea.dart';
 import 'package:story_app/presentation/widgets/image_frame.dart';
@@ -186,8 +187,10 @@ class _AddStoryPageState extends State<AddStoryPage> {
                               ? null
                               : _onUpload,
                           child: (state is StoryLoading)
-                              ? const Center(
-                                  child: CircularProgressIndicator(
+                              ? const SizedBox(
+                                  height: 50,
+                                  width: 50,
+                                  child: AnimatedCircularIndicator(
                                     color: AppColors.lightBlueColor,
                                   ),
                                 )

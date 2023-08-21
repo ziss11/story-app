@@ -7,7 +7,7 @@ import 'package:story_app/cubit/story/story_cubit.dart';
 import 'package:story_app/presentation/pages/add_story_page.dart';
 import 'package:story_app/presentation/pages/detail_story_page.dart';
 import 'package:story_app/presentation/pages/sign_in_page.dart';
-import 'package:story_app/presentation/widgets/app_shimmer.dart';
+import 'package:story_app/presentation/widgets/animated_circular_indicator.dart';
 import 'package:story_app/presentation/widgets/flag_icon_widget.dart';
 import 'package:story_app/presentation/widgets/story_card.dart';
 import 'package:story_app/utils/common.dart';
@@ -134,18 +134,7 @@ class _HomePageState extends State<HomePage> {
           child: BlocBuilder<StoryCubit, StoryState>(
             builder: (context, state) {
               if (state is StoryLoading) {
-                return ListView.separated(
-                  itemCount: 10,
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(height: 16);
-                  },
-                  itemBuilder: (context, index) {
-                    return AppShimmer(
-                      width: MediaQuery.of(context).size.width,
-                      height: 200,
-                    );
-                  },
-                );
+                return const AnimatedCircularIndicator();
               } else if (state is StorySuccess) {
                 return ListView.separated(
                   controller: scrollController,
@@ -156,11 +145,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   itemBuilder: (context, index) {
                     if (index == state.stories.length && state.page != null) {
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.lightBlueColor,
-                        ),
-                      );
+                      return const AnimatedCircularIndicator();
                     }
 
                     final story = state.stories[index];

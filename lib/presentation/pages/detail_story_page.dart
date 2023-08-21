@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:story_app/cubit/location/location_cubit.dart';
 import 'package:story_app/cubit/story_detail/story_detail_cubit.dart';
 import 'package:story_app/presentation/pages/maps_page.dart';
+import 'package:story_app/presentation/widgets/animated_circular_indicator.dart';
 import 'package:story_app/presentation/widgets/app_shimmer.dart';
 import 'package:story_app/utils/common.dart';
 import 'package:story_app/utils/styles/app_colors.dart';
@@ -55,11 +56,7 @@ class _DetailStoryPageState extends State<DetailStoryPage> {
         child: BlocBuilder<StoryDetailCubit, StoryDetailState>(
           builder: (context, state) {
             if (state is StoryDetailLoading) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.purpleColor,
-                ),
-              );
+              return const AnimatedCircularIndicator();
             } else if (state is StoryDetailSuccess) {
               final story = state.story;
               return SingleChildScrollView(

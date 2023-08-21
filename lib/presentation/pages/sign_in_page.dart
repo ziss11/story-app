@@ -5,6 +5,7 @@ import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:story_app/cubit/auth/auth_cubit.dart';
 import 'package:story_app/presentation/pages/home_page.dart';
 import 'package:story_app/presentation/pages/sign_up_page.dart';
+import 'package:story_app/presentation/widgets/animated_circular_indicator.dart';
 import 'package:story_app/presentation/widgets/app_button.dart';
 import 'package:story_app/presentation/widgets/app_textfield.dart';
 import 'package:story_app/utils/common.dart';
@@ -146,8 +147,10 @@ class _SignInPageState extends State<SignInPage> {
                           width: MediaQuery.of(context).size.width,
                           onPressed: login,
                           child: (state is AuthLoading)
-                              ? const Center(
-                                  child: CircularProgressIndicator(
+                              ? const SizedBox(
+                                  height: 50,
+                                  width: 50,
+                                  child: AnimatedCircularIndicator(
                                     color: AppColors.lightBlueColor,
                                   ),
                                 )
