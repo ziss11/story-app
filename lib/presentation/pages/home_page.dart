@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:story_app/cubit/auth/auth_cubit.dart';
 import 'package:story_app/cubit/story/story_cubit.dart';
 import 'package:story_app/presentation/pages/add_story_page.dart';
@@ -32,7 +33,6 @@ class _HomePageState extends State<HomePage> {
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
           scrollController.position.maxScrollExtent) {
-        debugPrint('page: ${storyCubit.page}');
         if (storyCubit.page != null) storyCubit.getStories(context);
       }
     });
@@ -136,7 +136,6 @@ class _HomePageState extends State<HomePage> {
               if (state is StoryLoading) {
                 return ListView.separated(
                   itemCount: 10,
-                  padding: const EdgeInsets.all(16),
                   separatorBuilder: (context, index) {
                     return const SizedBox(height: 16);
                   },
@@ -152,7 +151,6 @@ class _HomePageState extends State<HomePage> {
                   controller: scrollController,
                   itemCount:
                       state.stories.length + (state.page != null ? 1 : 0),
-                  padding: const EdgeInsets.all(16),
                   separatorBuilder: (context, index) {
                     return const SizedBox(height: 16);
                   },
@@ -167,10 +165,16 @@ class _HomePageState extends State<HomePage> {
 
                     final story = state.stories[index];
                     return StoryCard(
-                      onTap: () => context.goNamed(
-                        DetailStoryPage.routeName,
-                        pathParameters: {'id': story.id},
-                      ),
+                      onTap: () {
+                        context.goNamed(
+                          DetailStoryPage.routeName,
+                          pathParameters: {'id': story.id},
+                          extra: (story.latitude != null &&
+                                  story.longitude != null)
+                              ? LatLng(story.latitude!, story.longitude!)
+                              : null,
+                        );
+                      },
                       story: story,
                     );
                   },

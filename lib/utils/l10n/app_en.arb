@@ -33,5 +33,6 @@
     "emptyDescAlert": "Description can't be empty",
     "addLocationLabel": "Add Location",
     "save": "Save",
-    "pickLocationLabel": "Pick Location"
+    "pickLocationLabel": "Pick Location",
+    "seeLocation": "See location"
 }

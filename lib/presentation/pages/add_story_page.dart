@@ -7,7 +7,7 @@ import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:story_app/cubit/media/media_cubit.dart';
 import 'package:story_app/cubit/story/story_cubit.dart';
 import 'package:story_app/data/model/map_result.dart';
-import 'package:story_app/presentation/pages/location_picker.dart';
+import 'package:story_app/presentation/pages/maps_page.dart';
 import 'package:story_app/presentation/widgets/app_button.dart';
 import 'package:story_app/presentation/widgets/app_textarea.dart';
 import 'package:story_app/presentation/widgets/image_frame.dart';
@@ -32,14 +32,16 @@ class _AddStoryPageState extends State<AddStoryPage> {
   late TextEditingController descController;
 
   String? get placeName {
-    final locality = mapsResult?.placemark?.locality;
-    final subLocality = mapsResult?.placemark?.subLocality;
+    final administrativeArea = mapsResult?.placemark?.administrativeArea;
+    final subAdministrativeArea = mapsResult?.placemark?.subAdministrativeArea;
     final country = mapsResult?.placemark?.country;
 
-    if (locality == null && country == null && subLocality == null) {
+    if (administrativeArea == null &&
+        country == null &&
+        subAdministrativeArea == null) {
       return null;
     }
-    return '${subLocality ?? ''} $locality, $country';
+    return '$subAdministrativeArea, $administrativeArea, $country';
   }
 
   void _onUpload() async {
@@ -136,10 +138,9 @@ class _AddStoryPageState extends State<AddStoryPage> {
                     ),
                     ListTile(
                       onTap: () async {
-                        mapsResult = await context
-                            .pushNamed(LocationPickerPage.routeName);
+                        mapsResult =
+                            await context.pushNamed(MapsPage.pickRouteName);
                         setState(() {});
-                        debugPrint(mapsResult?.placemark.toString());
                       },
                       title: Text(
                         (mapsResult?.placemark != null)

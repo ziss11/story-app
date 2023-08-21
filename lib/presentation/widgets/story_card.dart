@@ -17,50 +17,48 @@ class StoryCard extends StatelessWidget {
       onTap: onTap,
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
-        child: Card(
-          color: AppColors.blackColor2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(12),
-                  ),
-                  child: CachedNetworkImage(
-                    imageUrl: story.photoUrl,
-                    fit: BoxFit.cover,
-                    cacheManager: CacheManager(
-                      Config(
-                        'story-image',
-                        stalePeriod: const Duration(days: 3),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                child: Row(
+                  children: [
+                    const CircleAvatar(
+                      minRadius: 15,
+                      child: Icon(Icons.person),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      story.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.foregroundColor,
                       ),
                     ),
-                    placeholder: (context, url) => AppShimmer(
-                      width: MediaQuery.of(context).size.width,
-                      height: 200,
-                    ),
-                    errorWidget: (context, url, error) =>
-                        const Center(child: Icon(Icons.error)),
+                  ],
+                ),
+              ),
+              CachedNetworkImage(
+                imageUrl: story.photoUrl,
+                fit: BoxFit.cover,
+                cacheManager: CacheManager(
+                  Config(
+                    'story-image',
+                    stalePeriod: const Duration(days: 3),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                  child: Text(
-                    story.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.foregroundColor,
-                    ),
-                  ),
+                placeholder: (context, url) => AppShimmer(
+                  width: MediaQuery.of(context).size.width,
+                  height: 200,
                 ),
-              ],
-            ),
+                errorWidget: (context, url, error) =>
+                    const Center(child: Icon(Icons.error)),
+              ),
+            ],
           ),
         ),
       ),

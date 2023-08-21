@@ -33,5 +33,6 @@
     "emptyDescAlert": "Deskripsi tidak boleh kosong",
     "addLocationLabel": "Tambahkan Lokasi",
     "save": "Simpan",
-    "pickLocationLabel": "Pilih Lokasi"
+    "pickLocationLabel": "Pilih Lokasi",
+    "seeLocation": "Lihat lokasi"
 }

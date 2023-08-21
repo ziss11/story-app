@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_app/cubit/auth/auth_cubit.dart';
 import 'package:story_app/cubit/localization/localization_cubit.dart';
-import 'package:story_app/cubit/location_picker/location_picker_cubit.dart';
+import 'package:story_app/cubit/location/location_cubit.dart';
 import 'package:story_app/cubit/media/media_cubit.dart';
 import 'package:story_app/cubit/story/story_cubit.dart';
 import 'package:story_app/cubit/story_detail/story_detail_cubit.dart';
@@ -30,7 +30,7 @@ abstract class Injection {
 
     locator.registerFactory<MediaCubit>(() => MediaCubit(locator()));
 
-    locator.registerFactory<LocationPickerCubit>(() => LocationPickerCubit());
+    locator.registerFactory<LocationCubit>(() => LocationCubit());
 
     // data sources
     locator.registerLazySingleton<AuthRemoteDataSource>(

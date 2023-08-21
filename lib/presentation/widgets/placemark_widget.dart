@@ -33,7 +33,7 @@ class PlacemarkWidget extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 Text(
-                  '${placemark.locality}, ${placemark.postalCode}, ${placemark.country}',
+                  '${placemark.subAdministrativeArea}, ${placemark.administrativeArea}, ${placemark.country}',
                   style: Theme.of(context).textTheme.labelLarge,
                 ),
               ],
