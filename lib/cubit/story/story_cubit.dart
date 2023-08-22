@@ -40,34 +40,25 @@ class StoryCubit extends Cubit<StoryState> {
 
   void getStories(BuildContext context, [bool restart = false]) async {
     try {
-      if (page == 1) emit(StoryLoading());
+      final newPage = restart ? 1 : page ?? 1;
+
+      if (newPage == 1) emit(StoryLoading());
 
       final token = _authLocalDataSource.getToken();
       final result = await _storyRemoteDataSource.getStories(token!,
-          page: restart ? 1 : page!, size: size);
+          page: newPage, size: size);
 
-      if (result.length < size) {
-        page = null;
-      } else {
-        page = page! + 1;
-      }
+      page = result.length < size ? null : newPage + 1;
 
       if (result.isEmpty) {
         if (state is StorySuccess) {
           final currentState = state as StorySuccess;
-
-          if (currentState.stories.isEmpty) {
-            emit(StoryInitial());
-          } else {
-            emit(StorySuccess(
-                stories: currentState.stories, page: page, size: size));
-          }
+          emit(currentState.stories.isEmpty ? StoryInitial() : currentState);
         }
       } else {
         if (state is StorySuccess) {
           final currentState = state as StorySuccess;
-          final updatedStory = List.of(currentState.stories)..addAll(result);
-
+          final updatedStory = [...currentState.stories, ...result];
           emit(StorySuccess(stories: updatedStory, page: page, size: size));
         } else {
           emit(StorySuccess(stories: result, page: page, size: size));

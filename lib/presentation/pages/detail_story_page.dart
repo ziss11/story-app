@@ -103,7 +103,11 @@ class _DetailStoryPageState extends State<DetailStoryPage> {
                                           final country =
                                               state.placemark?.country;
                                           return Text(
-                                            '$subAdministrativeArea, $country',
+                                            (subAdministrativeArea == null ||
+                                                    subAdministrativeArea
+                                                        .isEmpty)
+                                                ? country ?? ''
+                                                : '$subAdministrativeArea, $country',
                                             style: const TextStyle(
                                               fontSize: 11,
                                               color: AppColors.greyColor,
@@ -158,26 +162,23 @@ class _DetailStoryPageState extends State<DetailStoryPage> {
                           const Center(child: Icon(Icons.error)),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                      child: Row(
+                      padding: const EdgeInsets.all(16),
+                      child: Text.rich(TextSpan(
+                        text: '${story.name} ',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.foregroundColor,
+                        ),
                         children: [
-                          Text(
-                            story.name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.foregroundColor,
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            story.description,
+                          TextSpan(
+                            text: story.description,
                             style: const TextStyle(
                               fontWeight: FontWeight.w400,
                               color: AppColors.foregroundColor,
                             ),
                           ),
                         ],
-                      ),
+                      )),
                     ),
                   ],
                 ),
