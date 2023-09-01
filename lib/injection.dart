@@ -14,43 +14,41 @@ import 'package:story_app/data/datasources/localization/localizaion_local_dataso
 import 'package:story_app/data/datasources/story/story_remote_datasource.dart';
 
 abstract class Injection {
-  static final locator = GetIt.instance;
-
   static Future<void> init() async {
     // cubits
-    locator
-        .registerFactory<LocalizationCubit>(() => LocalizationCubit(locator()));
+    GetIt.I
+        .registerFactory<LocalizationCubit>(() => LocalizationCubit(GetIt.I()));
 
-    locator.registerFactory<AuthCubit>(() => AuthCubit(locator(), locator()));
+    GetIt.I.registerFactory<AuthCubit>(() => AuthCubit(GetIt.I(), GetIt.I()));
 
-    locator.registerFactory<StoryCubit>(() => StoryCubit(locator(), locator()));
+    GetIt.I.registerFactory<StoryCubit>(() => StoryCubit(GetIt.I(), GetIt.I()));
 
-    locator.registerFactory<StoryDetailCubit>(
-        () => StoryDetailCubit(locator(), locator()));
+    GetIt.I.registerFactory<StoryDetailCubit>(
+        () => StoryDetailCubit(GetIt.I(), GetIt.I()));
 
-    locator.registerFactory<MediaCubit>(() => MediaCubit(locator()));
+    GetIt.I.registerFactory<MediaCubit>(() => MediaCubit(GetIt.I()));
 
-    locator.registerFactory<LocationCubit>(() => LocationCubit());
+    GetIt.I.registerFactory<LocationCubit>(() => LocationCubit());
 
     // data sources
-    locator.registerLazySingleton<AuthRemoteDataSource>(
-        () => AuthRemoteDataSourceImpl(locator()));
+    GetIt.I.registerLazySingleton<AuthRemoteDataSource>(
+        () => AuthRemoteDataSourceImpl(GetIt.I()));
 
-    locator.registerLazySingleton<AuthLocalDataSource>(
-        () => AuthLocalDataSourceImpl(locator()));
+    GetIt.I.registerLazySingleton<AuthLocalDataSource>(
+        () => AuthLocalDataSourceImpl(GetIt.I()));
 
-    locator.registerLazySingleton<StoryRemoteDataSource>(
-        () => StoryRemoteDataSourceImpl(locator()));
+    GetIt.I.registerLazySingleton<StoryRemoteDataSource>(
+        () => StoryRemoteDataSourceImpl(GetIt.I()));
 
-    locator.registerLazySingleton<LocalizationLocalDataSource>(
-        () => LocalizationLocalDataSourceImpl(locator()));
+    GetIt.I.registerLazySingleton<LocalizationLocalDataSource>(
+        () => LocalizationLocalDataSourceImpl(GetIt.I()));
 
     // helper
-    locator.registerSingleton<SharedPreferences>(
+    GetIt.I.registerSingleton<SharedPreferences>(
         await SharedPreferences.getInstance());
 
     // external
-    locator.registerLazySingleton<ImagePicker>(() => ImagePicker());
-    locator.registerLazySingleton<Dio>(() => Dio());
+    GetIt.I.registerLazySingleton<ImagePicker>(() => ImagePicker());
+    GetIt.I.registerLazySingleton<Dio>(() => Dio());
   }
 }
