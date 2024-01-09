@@ -21,6 +21,8 @@ class StoryCubit extends Cubit<StoryState> {
 
   void addStory(BuildContext context, List<int> bytes, String filename,
       String description, LatLng? latLng) async {
+    final message = AppLocalizations.of(context)!.unableLoadStoryMessage;
+
     try {
       emit(StoryLoading());
 
@@ -31,14 +33,14 @@ class StoryCubit extends Cubit<StoryState> {
       emit(UploadStorySuccess());
     } catch (e) {
       emit(
-        StoryFailed(
-          message: AppLocalizations.of(context)!.unableLoadStoryMessage,
-        ),
+        StoryFailed(message: message),
       );
     }
   }
 
   void getStories(BuildContext context, [bool restart = false]) async {
+    final message = AppLocalizations.of(context)!.unableLoadStoryMessage;
+
     try {
       final newPage = restart ? 1 : page ?? 1;
 
@@ -66,9 +68,7 @@ class StoryCubit extends Cubit<StoryState> {
       }
     } catch (e) {
       emit(
-        StoryFailed(
-          message: AppLocalizations.of(context)!.unableLoadStoryMessage,
-        ),
+        StoryFailed(message: message),
       );
     }
   }

@@ -28,20 +28,21 @@ class AuthCubit extends Cubit<AuthState> {
 
   void register(
       BuildContext context, String name, String email, String password) async {
+    final message = AppLocalizations.of(context)!.registerErrorMessage;
     try {
       emit(AuthLoading());
       await _remoteDataSource.register(name, email, password);
       emit(AuthSuccess());
     } catch (e) {
       emit(
-        AuthFailed(
-          message: AppLocalizations.of(context)!.registerErrorMessage,
-        ),
+        AuthFailed(message: message),
       );
     }
   }
 
   void login(BuildContext context, String email, String password) async {
+    final message = AppLocalizations.of(context)!.loginErrorMessage;
+
     try {
       emit(AuthLoading());
 
@@ -51,9 +52,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthSuccess());
     } catch (e) {
       emit(
-        AuthFailed(
-          message: AppLocalizations.of(context)!.loginErrorMessage,
-        ),
+        AuthFailed(message: message),
       );
     }
   }

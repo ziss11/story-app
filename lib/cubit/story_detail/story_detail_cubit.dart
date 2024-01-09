@@ -16,6 +16,7 @@ class StoryDetailCubit extends Cubit<StoryDetailState> {
       : super(StoryDetailInitial());
 
   void getDetailStory(BuildContext context, String id) async {
+    final message = AppLocalizations.of(context)!.unableLoadStoryMessage;
     try {
       emit(StoryDetailLoading());
 
@@ -25,9 +26,7 @@ class StoryDetailCubit extends Cubit<StoryDetailState> {
       emit(StoryDetailSuccess(story: result));
     } catch (e) {
       emit(
-        StoryDetailFailed(
-          message: AppLocalizations.of(context)!.unableLoadStoryMessage,
-        ),
+        StoryDetailFailed(message: message),
       );
     }
   }

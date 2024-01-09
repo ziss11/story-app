@@ -111,10 +111,9 @@ class _AddStoryPageState extends State<AddStoryPage> {
   @override
   Widget build(BuildContext context) {
     final isPaid = FlavorConfig.instance.flavorType == FlavorType.paid;
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (_) {
         context.read<MediaCubit>().setImage(null, null);
-        return true;
       },
       child: KeyboardDismisser(
         child: Scaffold(

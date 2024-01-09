@@ -48,7 +48,7 @@ dependencies:
   shimmer: ^3.0.0
   image_picker: ^1.0.2
   image: ^4.0.17
-  cached_network_image: ^3.2.3
+  cached_network_image: ^3.3.1
   flutter_cache_manager: ^3.3.1
   keyboard_dismisser: ^3.0.0
   json_annotation: ^4.8.1
